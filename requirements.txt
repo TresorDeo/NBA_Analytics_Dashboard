@@ -1,0 +1,1 @@
+"streamlit\nnba_api\nplotly\npandas\nnumpy\nscikit-learn" 
