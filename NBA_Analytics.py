@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
+import requests  # Ajouté pour gérer les exceptions de timeout
+import os
 
 try:
     from nba_api.stats.endpoints import playergamelog, commonallplayers
@@ -40,8 +42,6 @@ def load_players():
     except Exception as e:
         st.error(f"Error loading players data: {str(e)}. Please ensure the NBA API is accessible.")
         st.stop()
-
-import os  # Ajouté pour vérifier l'existence du fichier
 
 # --- 2. Logs d’un joueur ---
 @st.cache_data
