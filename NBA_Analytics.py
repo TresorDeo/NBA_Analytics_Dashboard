@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
-import requests  # Ajouté pour gérer les exceptions de timeout
+import requests
 import os
 
 try:
@@ -27,14 +27,18 @@ current_teams = {
 # --- 1. Chargement des joueurs ---
 @st.cache_data
 def load_players():
+    st.write("Loading players data...")
     try:
         # Vérifie si le fichier CSV existe déjà
         if os.path.exists("players.csv"):
+            st.write("Using cached players.csv")
             return pd.read_csv("players.csv")
         # Sinon, récupère les données avec un délai d'attente plus long
-        players = commonallplayers.CommonAllPlayers(timeout=60).get_data_frames()[0]  # Timeout de 60 secondes
+        st.write("Fetching data from NBA API...")
+        players = commonallplayers.CommonAllPlayers(timeout=120).get_data_frames()[0]  # Timeout de 120 secondes
         df = players[["PERSON_ID", "DISPLAY_FIRST_LAST"]].dropna()
         df.to_csv("players.csv", index=False)
+        st.write("Data fetched and cached successfully")
         return df
     except requests.exceptions.ReadTimeout:
         st.error("Timeout error: The NBA API took too long to respond. Please try again later or check your internet connection.")
@@ -46,8 +50,10 @@ def load_players():
 # --- 2. Logs d’un joueur ---
 @st.cache_data
 def get_player_game_logs(player_id, season="2024-25", max_games=50):
-    logs = playergamelog.PlayerGameLog(player_id=player_id, season=season, timeout=60).get_data_frames()[0]
+    st.write(f"Loading game logs for player ID {player_id}...")
+    logs = playergamelog.PlayerGameLog(player_id=player_id, season=season, timeout=120).get_data_frames()[0]
     logs = logs.sort_values("GAME_DATE", ascending=True).tail(max_games)
+    st.write("Game logs loaded successfully")
     return logs
 
 # --- 3. Préparation des features ---
