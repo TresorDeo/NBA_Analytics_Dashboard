@@ -1,1 +1,7 @@
-"streamlit\nnba_api\nplotly\npandas\nnumpy\nscikit-learn" 
+streamlit
+nba_api
+plotly
+pandas
+numpy
+scikit-learn
+
